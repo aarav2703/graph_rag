@@ -2,20 +2,3 @@
 .env
 .env.*
 
-# Python
-__pycache__/
-*.pyc
-
-# Notebooks
-.ipynb_checkpoints/
-
-# Data artifacts (keep only if you explicitly want them tracked)
-data/raw/
-data/duckdb/
-data/index/chunks.faiss
-data/index/*.faiss
-data/index/*.parquet
-
-# OS
-.DS_Store
-Thumbs.db
