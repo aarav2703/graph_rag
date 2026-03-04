@@ -1,223 +1,188 @@
-# PMC_GraphRAG — Hybrid Graph-RAG for Citation-Grounded Biomedical Literature Retrieval
+# PMC_GraphRAG — Graph-First Biomedical Retrieval with Citation-Grounded Evidence
 
-This is a biomedical literature retrieval system I built over the **PMC Open Access Subset**. If you give it a free-text symptom query, it retrieves citation-backed evidence from peer-reviewed articles. It does this by combining:
+This repository contains a biomedical literature retrieval system built over the PMC Open Access Subset. Given a free-text symptom-style query, it retrieves citation-backed evidence from peer-reviewed articles using:
 
-- **Graph traversal** over extracted relationships (Symptom → Condition → Evidence → Article)
-- **Semantic similarity search** over chunk embeddings using FAISS
+* **Graph traversal** over extracted relationships (Symptom → Condition → Evidence → Article)
+* **Semantic similarity search** over chunk embeddings (FAISS) as a fallback recall path
 
-A quick note upfront: This is an applied NLP and retrieval systems project. It is **not** a diagnostic tool, and it completely avoids using patient records, EHRs, or any protected health information.
-
----
+*A quick note upfront: this is an applied NLP / information retrieval project. It is not a diagnostic tool and it does not use any patient records, EHRs, or protected health information.*
 
 ## Why build this?
+Naive RAG on biomedical text often returns vaguely relevant chunks without preserving *why* they are relevant, or how they connect to a symptom query in a traceable way. I wanted a retrieval layer that is:
 
-Throwing naive RAG at medical text usually results in vaguely relevant chunks being passed to an LLM without preserving *why* they matter or how they actually connect to the user's symptoms. I wanted to build a structured evidence layer instead.
+* **inspectable** (you can see the path from symptoms → conditions → evidence)
+* **citation-safe** (every snippet is linked back to a PMCID + section + chunk)
+* **explainable** (the graph provides explicit relational structure)
 
-In this pipeline:
-- Symptoms and conditions are explicitly extracted from the literature.
-- Mentions are linked to UMLS concepts offline.
-- Every evidence chunk retains its provenance back to the source article.
-- Query-time retrieval merges structured graph signals with semantic recall.
-
-The end result is a retrieval pipeline that is inspectable, citation-safe, and explainable—a step up from a standard vector-search chatbot.
-
----
+The high-level idea is: push heavy concept linking offline, then do lightweight symptom grounding at query time, and always keep evidence provenance intact.
 
 ## What the system does
 
-### What's included
-- Ingests PMC Open Access articles, filtering explicitly for open licenses (CC0/CC-BY/CC-BY-SA/CC-BY-ND).
-- Parses messy JATS XML into clean, structured paragraph-level text.
-- Restricts retrieval strictly to **Results** and **Discussion** sections.
-- Extracts UMLS-grounded symptom and condition mentions offline via SciSpaCy.
-- Builds a provenance-preserving graph (Symptom ↔ Condition ↔ Evidence Chunk ↔ Article).
-- Builds a local FAISS index for fallback embedding retrieval.
-- Combines graph traversal and semantic retrieval at query time.
-- (Optional) Passes retrieved evidence to the DeepSeek API to compose a final, constrained response.
+### Included
+* Ingests PMC OA articles with explicit open licenses (CC0/CC-BY/CC-BY-SA/CC-BY-ND).
+* Parses messy JATS XML into structured text.
+* Restricts retrieval to Results and Discussion sections.
+* Extracts and links mentions to UMLS concepts offline (SciSpaCy).
+* Builds a provenance-preserving evidence graph: Symptom ↔ Condition ↔ Evidence Chunk ↔ Article.
+* Builds a local FAISS index over chunk embeddings for semantic retrieval.
+* Retrieves evidence at query time via:
+    * a graph-first path (concept traversal)
+    * a vector fallback path (semantic recall)
+* Optional: uses an LLM only as a constrained writer over retrieved evidence (not as a primary reasoning engine).
 
-### What's explicitly excluded
-- No patient data or protected health information (PHI).
-- No EHR or MIMIC data.
-- No medical diagnosis or treatment planning.
-- No model training on clinical outcome labels.
+### Explicitly excluded
+* No patient data / PHI.
+* No EHR or MIMIC data.
+* No diagnosis or treatment planning.
+* No model training on clinical outcomes.
 
----
+## Quantitative snapshot (local run)
+From a representative local build:
 
-## Quantitative snapshot
+* **1,000** PMC OA articles requested
+* **994** unique PMCIDs parsed (99.4% success)
+* **88,995** paragraph-level rows extracted
+* **20,838** Results/Discussion rows retained
+* **12,935** retrieval-ready evidence chunks
+* **5,779** UMLS-grounded concepts
+* **609,882** provenance-linked evidence rows
+* **290,910** aggregated symptom-condition edges
+* **~0.23–0.25 sec** typical retrieval latency (local sanity query suite; LLM step excluded)
 
-Metrics from my current local run:
-- **1,000** PMC OA articles requested
-- **994** unique PMCIDs parsed (**99.4%** success rate)
-- **88,995** paragraph-level rows extracted
-- **20,838** Results/Discussion paragraph rows retained
-- **12,935** retrieval-ready evidence chunks
-- **5,779** UMLS-grounded concepts
-- **609,882** provenance-linked evidence rows
-- **290,910** aggregated symptom-condition edges
-- **~0.23–0.25 sec** hybrid retrieval latency (on my local machine, running the sanity-query suite)
+*These numbers reflect a local-first, notebook-driven build for rapid iteration, not a hosted production cluster.*
 
-*Note: These numbers reflect a local-first, notebook-driven build for rapid iteration, not a hosted production cluster.*
+## Core idea: graph-first retrieval with semantic fallback
+At inference time, the system runs two retrieval paths:
 
----
+1.  **Graph path (primary signal):** Map query symptoms to known concepts, traverse symptom→condition edges, and gather supporting evidence chunks and source PMCIDs.
+2.  **Embedding path (fallback recall):** Encode the raw query, retrieve semantically similar chunks via FAISS, and map those chunks back to candidate conditions through the evidence tables.
+3.  **Merge & rerank (hybrid mode):** Combine candidates from both paths to produce a final condition ranking and evidence pack.
 
-## The core idea: Hybrid Retrieval
+In practice (see evaluation results below), my current implementation behaves more like graph-first retrieval with vector backoff, which is a reasonable outcome for this setting.
 
-Here is how the hybrid retrieval actually works under the hood:
+## Engineering design notes (the “why” behind a few choices)
+* **Offline heavy linking, lightweight online grounding:** Loading the full UmlsEntityLinker at inference caused large memory spikes on my local machine. I moved entity linking offline, and kept the online step lightweight (NER + lexical grounding into already-known concept space). This keeps query-time memory stable.
+* **Dense offline graph, prune at query time:** I built a high-recall graph offline and push pruning to retrieval time, while keeping provenance on every edge so citations remain traceable.
+* **Token-based chunking:** Biomedical paragraphs vary wildly in length. Token windows (~350 tokens, 50 overlap) produce more consistent embedding behavior than paragraph boundaries.
+* **Generic symptom handling:** Some symptoms are poor discriminators (e.g., fever). I added downweighting logic so generic symptoms don’t dominate the condition ranking.
 
-1. **The Graph Path:** Map the query symptoms to known concepts, traverse the symptom→condition edges, and pull the supporting evidence chunks and source articles.
-2. **The Embedding Path:** Encode the raw query, retrieve semantically similar chunks via FAISS, and map those chunks back to candidate conditions via the evidence tables.
-3. **Merge & Rerank:** Combine candidates from both paths, preserving evidence diversity and provenance.
-
-If you use the optional LLM step, the LLM acts purely as a constrained writer over this retrieved evidence, rather than a primary reasoning engine.
-
----
-
-## Engineering Design & Trade-offs
-
-Building this involved a few key architectural choices to prioritize stability and memory management over generic conversational fluff:
-
-- **Offline High-Recall Graph:** I built the graph to be dense offline to capture broad co-occurrences. This moves the heavy lifting of pruning to query-time rather than making ingestion a bottleneck. Every edge keeps explicit provenance so citations are always traceable.
-- **Solving Query-Time Memory Spikes:** Initially, I tried loading the full `UmlsEntityLinker` at inference, but it caused a ~400MB memory spike on my local hardware. To fix this, the query path now just relies on lightweight NER + lexical grounding, which maps cheaply to the concepts I already grounded in the offline graph.
-- **Why Hybrid is Necessary:** Strict ontology mapping misses the weird ways users actually phrase symptoms. The FAISS index acts as a high-recall fallback to catch evidence when the semantic mapping fails.
-- **Chunking Strategy:** I went with token-based chunking (~350 tokens, 50 overlap) instead of paragraph boundaries. Biomedical articles vary wildly in paragraph length, so token windows keep the embedding models much happier and more consistent.
-- **Handling Non-Specific Symptoms:** Symptoms like *fever* show up in practically every disease, making them terrible discriminators. I added logic to downweight generic symptoms so they don't hijack the condition rankings.
-
----
-
-## Pipeline Overview
-
+## Pipeline overview
 ```text
-## System Architecture (Simplified)
-
 User Query
     ↓
 Symptom Extraction (NER + Lexical)
     ↓
-┌───────────────┬─────────────────┐
-│ Graph Traversal│ FAISS Retrieval │
-│ (UMLS-grounded)│ (Embeddings)    │
-└───────────────┴─────────────────┘
+┌─────────────────────┬──────────────────┐
+│ Graph Traversal     │ FAISS Retrieval  │
+│ (UMLS-grounded)     │ (Embeddings)     │
+└─────────────────────┴──────────────────┘
             ↓
-      Merge & Rerank
+      Candidate Fusion
             ↓
        Evidence Pack
             ↓
      Optional LLM Output
 ```
 
-### 1) `01_download_parse.ipynb` — Ingestion + XML Parsing
-Builds the raw corpus. This is strictly a plumbing notebook—no NLP or retrieval logic here.
-- Queries PMC (initially using `sepsis` + license filters).
-- Downloads XML/JSON via boto3 and parses the JATS XML (namespace-agnostic).
-- Drops retracted articles.
-- **Output:** `pmc_raw_articles.parquet`
+## Notebooks (build pipeline)
+* `notebooks/01_download_parse.ipynb` — ingestion + JATS parsing → `pmc_raw_articles.parquet`
+* `notebooks/02_sql_filtering.ipynb` — Results/Discussion filtering + chunking → `pmc_retrieval_candidates.parquet`
+* `notebooks/03_scispacy_uml.ipynb` — offline concept linking + graph tables (`graph_concepts.parquet`, `graph_mentions.parquet`, `graph_edge_evidence.parquet`, `graph_edges_symptom_condition.parquet`, …)
+* `notebooks/04_hybrid_retreival.ipynb` — embeddings + FAISS index (`chunks.faiss`, `chunk_lookup.parquet`, `chunk_meta.json`)
+* `notebooks/05_query_compose.ipynb` — end-to-end retrieval + composition
 
-### 2) `02_sql_filtering.ipynb` — Evidence Layer Construction
-Converts raw text into clean chunks using DuckDB, prioritizing evidence quality over volume.
-- Keeps latest article versions, filtering down to Results/Discussion.
-- Applies the 350-token sliding window and drops tiny tail chunks.
-- **Output:** `pmc_retrieval_candidates.parquet`
+## Lightweight Python wrapper (for evaluation + testing)
+`src/pmc_graphrag/pipeline.py`
 
-### 3) `03_scispacy_umls.ipynb` — Offline Graph Prep
-Does the heavy NLP lifting to build the offline graph.
-- Runs SciSpaCy to extract and link entities to UMLS.
-- Filters down to Symptoms/Findings and Conditions/Diseases.
-- **Outputs:** `graph_concepts.parquet`, `graph_mentions.parquet`, `graph_edge_evidence.parquet`, `graph_edges_symptom_condition.parquet`, `graph_nx.pkl`, etc.
+A notebook-compatible wrapper exposing:
+* `GraphRAGPipeline.retrieve(query, mode={graph|vector|hybrid})`
+* `retrieved_pmcids_from_context(context)`
 
-### 4) `04_hybrid_retrieval.ipynb` — Embeddings & FAISS Index
-Sets up the semantic fallback layer.
-- Embeds chunks using `all-MiniLM-L6-v2`.
-- Builds a FAISS `IndexFlatIP` index for cosine similarity.
-- **Outputs:** `chunks.faiss`, `chunk_lookup.parquet`, `chunk_meta.json`
+## Evaluation (baseline benchmark)
+Since I don’t have clinical gold labels, I built a silver retrieval benchmark derived from the corpus itself.
 
-### 5) `05_query_compose.ipynb` — Inference & Composition
-Runs end-to-end hybrid retrieval.
-- Merges graph and FAISS candidates.
-- Applies symptom specificity weighting.
-- Optionally calls DeepSeek to format the final citation-ready response.
+### Silver benchmark construction (weak supervision)
+1.  Sample PMCIDs that have multiple symptom-linked evidence rows.
+2.  Select 2–4 plausible “symptom-like” concepts linked to that PMCID.
+3.  Use those symptom strings as the query.
+4.  Treat the original PMCID as the relevant document.
 
----
+This is not meant to measure “diagnostic correctness.” It measures: *can the system retrieve the source document that generated the symptom evidence?*
 
-## Why this is different from a standard RAG project
+The generator lives in: `eval/generate_silver_set.py` → produces `eval/queries_silver.jsonl`
 
-Most RAG tutorials stop at: load text → chunk → embed → retrieve top-k → prompt LLM.
+### Metrics and runner
+* `eval/metrics.py` (Recall@k, MRR, nDCG@k)
+* `eval/run_eval.py` runs graph, vector, hybrid and writes `eval/results.csv`
 
-This project takes it further by adding ontology-grounded entity extraction, explicit graph construction, memory-safe online/offline separation, and strict evidence provenance attached to every single retrieval hop. It’s built more like an information retrieval system than a wrapper around an API.
+### Current benchmark results (n=120 queries)
+| mode   | p50 latency (s) | p95 latency (s) | Recall@10 | Recall@20 | MRR@50 | nDCG@10 |
+|--------|-----------------|-----------------|-----------|-----------|--------|---------|
+| graph  | 0.146           | 0.154           | 0.433     | 0.500     | 0.208  | 0.256   |
+| hybrid | 0.217           | 0.241           | 0.408     | 0.483     | 0.198  | 0.244   |
+| vector | 0.191           | 0.215           | 0.392     | 0.425     | 0.207  | 0.249   |
 
----
+### Interpretation (honest)
+* On this benchmark, graph retrieval is the strongest signal.
+* The current hybrid fusion does not consistently improve over graph-only; it is best read as a fallback mechanism rather than a guaranteed booster.
+* This is still a meaningful outcome: it suggests the UMLS-grounded structure is providing real retrieval value beyond embeddings alone.
 
-## Evaluation Notes (Retrieval Behavior)
+## How to run
 
-Since I don't have clinical gold labels for this subset, I evaluated the system based on retrieval behavior diagnostics:
-
-- **Graph vs Embedding Overlap:** Top-K condition overlap between the graph and FAISS paths varies by query (Jaccard@10 ≈ 0.0–0.6). This is a good thing—it shows the two paths provide complementary signals rather than redundant hits.
-- **Hybrid Recall Benefit:** The embedding fallback consistently recovers relevant conditions when the query is underspecified or the symptom grounding is weak.
-- **Evidence Diversity:** Final evidence packs usually pull from 8–16 distinct PMCIDs per query, which reduces the chance of a single paper dominating the results.
-- **Fallback Behavior:** If a query is incredibly generic and no specific symptoms are extracted, the system degrades gracefully to embedding-only retrieval rather than crashing or returning blank.
-- **Latency:** End-to-end retrieval takes about ~0.23–0.25 seconds per query locally (excluding the optional LLM generation).
-
----
-
-## How to run it
-
-### 1. Set up the environment
+### Environment
 ```bash
-conda create -n pmc-graphrag python=3.10
-conda activate pmc-graphrag
+conda create -n pmc_graphrag python=3.10
+conda activate pmc_graphrag
 pip install -r requirements.txt
-pip install python-dotenv # if you plan to use the DeepSeek generation
+```
+If you plan to use the optional LLM synthesis step:
+```bash
+pip install python-dotenv
 ```
 
-### 2. Add API keys (Optional)
-Create a `.env` file in the root if you want the final LLM synthesis:
-```env
-DEEPSEEK_API_KEY=sk-xxxxxxxxxxxxxxxx
+### Build the corpus (notebooks)
+Run 01 → 05 in order under `notebooks/`.
+
+### Run evaluation (Windows / PowerShell)
+This repo includes a small helper to ensure imports resolve cleanly. 
+
+Generate the silver set:
+```powershell
+python .\eval\generate_silver_set.py
 ```
 
-### 3. Run the pipeline
-Execute notebooks `01` through `05` in order. 
+Run evaluation (ensure repo root + src are on PYTHONPATH):
+```powershell
+$env:PYTHONPATH="D:\Pictures\pmc_graphrag;D:\Pictures\pmc_graphrag\src"
+python -m eval.run_eval --queries eval\queries_silver.jsonl --mode all
+```
 
-If you want to scale up the corpus, just change `MAX_ARTICLES = 1000` in notebook 01 and rerun everything downstream.
+The runner prints a summary table and writes: `eval/results.csv`
 
----
+## Example output (illustrative)
+* **Input symptoms:** fever, hypotension, confusion
+* **Top literature-associated condition:** Sepsis
+* **Evidence snippets:** returned with PMCID + section provenance.
 
-## Example Output (Illustrative)
+*Note: associations reflect literature co-occurrence, not a diagnosis.*
 
-**Input symptoms:** `fever, hypotension, confusion`
+## Project highlights / impact summary
+* Built a provenance-preserving biomedical retrieval pipeline over PMC Open Access articles, transforming raw JATS XML into an evidence layer usable for citation-grounded retrieval.
+* Constructed a UMLS-grounded evidence graph linking symptoms → conditions → evidence chunks → source articles, enabling inspectable multi-hop retrieval.
+* Implemented a lightweight inference wrapper and evaluation harness to benchmark graph vs embedding vs hybrid retrieval using standard IR metrics (Recall@k, MRR, nDCG).
 
-**Top literature-associated condition:** **Sepsis**
+## Tech stack
+* **Data & processing:** Python, Pandas, DuckDB, Parquet
+* **NLP & graph:** SciSpaCy, UMLS, NetworkX
+* **Search & embeddings:** SentenceTransformers, FAISS
+* **Infrastructure:** AWS Open Data access (boto3)
+* **Optional LLM:** DeepSeek API (constrained writing only)
 
-**Supporting evidence (excerpted):**
-- **PMC1234567 — Results section** *“…patients presenting with hypotension and altered mental status were significantly more likely to develop septic shock…”*
-- **PMC2345678 — Discussion section** *“…fever combined with circulatory instability remains a key clinical indicator associated with sepsis-related outcomes…”*
-
-*Notes: Associations reflect literature co-occurrence, not a diagnosis. Every snippet maps directly to its source PMC Open Access article.*
-
----
-
-## Project Highlights / Impact Summary
-
-- Built a hybrid Graph-RAG biomedical retrieval pipeline over 1,000 PMC Open Access articles, processing 88K+ paragraphs into 12.9K evidence chunks with a 99.4% ingestion success rate.
-- Constructed an explainable knowledge graph containing 5.8K UMLS-grounded concepts and 609K provenance-linked evidence rows, allowing multi-hop traversal between symptoms, conditions, and citations.
-- Engineered a local-first retrieval system combining DuckDB, SciSpaCy, FAISS, and NetworkX, optimizing query-time memory usage by decoupling heavy UMLS linking from the inference path.
-
----
-
-## Tech Stack
-- **Data & Processing:** Python, Pandas, DuckDB, Parquet
-- **NLP & Knowledge Graphs:** SciSpaCy, UMLS, NetworkX
-- **Search & Embeddings:** SentenceTransformers, FAISS
-- **Infrastructure:** AWS Open Data (boto3)
-- **LLM:** DeepSeek API
-
----
-
-## Future Ideas
-- Set up a formal retrieval evaluation suite with curated biomedical queries.
-- Improve lexical normalization for edge-case query phrasing.
-- Package the inference step into a lightweight FastAPI service.
-
----
+## Future work (high-value next steps)
+* Tighten the “symptom-like concept” filter to better match real user symptom phrasing (reducing administrative / demographic concepts).
+* Add a small manually curated query set (20–50 queries) for a higher-precision benchmark.
+* Experiment with alternative fusion strategies (e.g., max fusion / reciprocal rank fusion) and evaluate against the benchmark.
+* Package inference as a lightweight API service (FastAPI) with a minimal regression test suite.
 
 ## Disclaimer
 *This repository is a portfolio project focused on data engineering, NLP, and information retrieval. It is not a medical device, diagnostic system, or clinical decision support tool.*
