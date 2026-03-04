@@ -1,0 +1,120 @@
+{"qid": "silver_0001", "query": "underdiagnosis, Unmarried, Marital Status - Single", "relevant_pmcids": ["PMC12927128"]}
+{"qid": "silver_0002", "query": "Antimicrobial susceptibility, No risk, Pain Threshold", "relevant_pmcids": ["PMC12926366"]}
+{"qid": "silver_0003", "query": "Genetic Fusion Positive, Positive, Positive Finding", "relevant_pmcids": ["PMC12929920"]}
+{"qid": "silver_0004", "query": "Antimicrobial susceptibility, risk factors", "relevant_pmcids": ["PMC12926100"]}
+{"qid": "silver_0005", "query": "Related personal status, Social Interaction, Secreted", "relevant_pmcids": ["PMC12927097"]}
+{"qid": "silver_0006", "query": "Global Progressive Disease, Antimicrobial susceptibility, NO TREATMENT, Favorable Response", "relevant_pmcids": ["PMC12927176"]}
+{"qid": "silver_0007", "query": "Related personal status, Reduced, Comorbidity", "relevant_pmcids": ["PMC12930847"]}
+{"qid": "silver_0008", "query": "Signs and Symptoms, Finding", "relevant_pmcids": ["PMC12931744"]}
+{"qid": "silver_0009", "query": "ESR1 Status by Immunohistochemistry, Decreased Expression", "relevant_pmcids": ["PMC12928652"]}
+{"qid": "silver_0010", "query": "Negative, Negative Finding", "relevant_pmcids": ["PMC12926632"]}
+{"qid": "silver_0011", "query": "Ventilation status, risk factors", "relevant_pmcids": ["PMC12925864"]}
+{"qid": "silver_0012", "query": "Green - answer to question, Blue - answer to question, Redness", "relevant_pmcids": ["PMC12928907"]}
+{"qid": "silver_0013", "query": "M2 modifier, Obstruction", "relevant_pmcids": ["PMC12930545"]}
+{"qid": "silver_0014", "query": "Moderate, Allergy Severity - Severe", "relevant_pmcids": ["PMC12925348"]}
+{"qid": "silver_0015", "query": "Sexual intercourse - finding, Fatalities, risk factors", "relevant_pmcids": ["PMC12929328"]}
+{"qid": "silver_0016", "query": "Discharge, body substance, Immunocompromised Host, Convergent gaze, Expedite", "relevant_pmcids": ["PMC12929503"]}
+{"qid": "silver_0017", "query": "risk factors, Cardiac shunt", "relevant_pmcids": ["PMC12932069"]}
+{"qid": "silver_0018", "query": "Reduced, Decreasing", "relevant_pmcids": ["PMC12927459"]}
+{"qid": "silver_0019", "query": "Impaired mobility, Signs and Symptoms", "relevant_pmcids": ["PMC12926367"]}
+{"qid": "silver_0020", "query": "Observation parameter, Lung function testing normal, Respiratory System Finding, Respiratory pressure", "relevant_pmcids": ["PMC12927059"]}
+{"qid": "silver_0021", "query": "Swollen Lymph Node, Allergy Severity - Severe", "relevant_pmcids": ["PMC12929649"]}
+{"qid": "silver_0022", "query": "Coagulation thrombin induced, Coagulation surface induced, Mechanical ventilation finding, Immunocompromised Host", "relevant_pmcids": ["PMC12924733"]}
+{"qid": "silver_0023", "query": "Mutation Rate, risk factors", "relevant_pmcids": ["PMC12930722"]}
+{"qid": "silver_0024", "query": "Allergy Severity - Severe, Intensity and Distress 5, Fasting", "relevant_pmcids": ["PMC12928926"]}
+{"qid": "silver_0025", "query": "Low Birth Weights, Third trimester onset, Second trimester onset, Discontinued", "relevant_pmcids": ["PMC12928596"]}
+{"qid": "silver_0026", "query": "Bulla, Patient Outcome - Died", "relevant_pmcids": ["PMC12930267"]}
+{"qid": "silver_0027", "query": "Patient currently pregnant, Oral health", "relevant_pmcids": ["PMC12931276"]}
+{"qid": "silver_0028", "query": "Allergy Severity - Severe, Intensity and Distress 5", "relevant_pmcids": ["PMC12924776"]}
+{"qid": "silver_0029", "query": "Aspartate Aminotransferase Increased, Iterations, Raised prostate specific antigen, Encounter due to low income", "relevant_pmcids": ["PMC12925323"]}
+{"qid": "silver_0030", "query": "Reduced, Low severity, Platelet Activation Problem", "relevant_pmcids": ["PMC12930098"]}
+{"qid": "silver_0031", "query": "Device Imprecision, Irregularly spaced teeth", "relevant_pmcids": ["PMC12930727"]}
+{"qid": "silver_0032", "query": "Antimicrobial susceptibility, Decreased diastolic arterial pressure, Disease Outcome, Disease Outcome or Response", "relevant_pmcids": ["PMC12930570"]}
+{"qid": "silver_0033", "query": "Signs and Symptoms, Finding, Experimental Finding", "relevant_pmcids": ["PMC12928952"]}
+{"qid": "silver_0034", "query": "M2 modifier, Metastasis stage M1, Finding of platelet count", "relevant_pmcids": ["PMC12930211"]}
+{"qid": "silver_0035", "query": "Religious Affiliation - Meditation, Death of relative, Depressive Symptoms, Phenotypic Variation", "relevant_pmcids": ["PMC12926472"]}
+{"qid": "silver_0036", "query": "Treponema identified, Microfilaria sp identified, Container status - Identified", "relevant_pmcids": ["PMC12926286"]}
+{"qid": "silver_0037", "query": "Observation parameter, Genetic Profile, No status change", "relevant_pmcids": ["PMC12931723"]}
+{"qid": "silver_0038", "query": "Signs and Symptoms, Finding", "relevant_pmcids": ["PMC12931336"]}
+{"qid": "silver_0039", "query": "Not Normal but Fairly Active, Absent response to treatment", "relevant_pmcids": ["PMC12926426"]}
+{"qid": "silver_0040", "query": "Serum albumin level, Liver pain, Alanine Aminotransferase Increased", "relevant_pmcids": ["PMC12929223"]}
+{"qid": "silver_0041", "query": "Antimicrobial susceptibility, Care team, Pain Threshold", "relevant_pmcids": ["PMC12926330"]}
+{"qid": "silver_0042", "query": "Asthenia, Weakness, Walking distance", "relevant_pmcids": ["PMC12928904"]}
+{"qid": "silver_0043", "query": "Pulmonary compliance, Instability, Reduced", "relevant_pmcids": ["PMC12928865"]}
+{"qid": "silver_0044", "query": "gastrointestinal gas, ACUTE INSULIN RESPONSE, Discharge, body substance", "relevant_pmcids": ["PMC12928891"]}
+{"qid": "silver_0045", "query": "Tumor grade G1, Seizures", "relevant_pmcids": ["PMC12926684"]}
+{"qid": "silver_0046", "query": "Unmarried, Marital Status - Single", "relevant_pmcids": ["PMC12926205"]}
+{"qid": "silver_0047", "query": "Comorbidity, Negative", "relevant_pmcids": ["PMC12930329"]}
+{"qid": "silver_0048", "query": "Treponema identified, Microfilaria sp identified, Container status - Identified, Related personal status", "relevant_pmcids": ["PMC12926709"]}
+{"qid": "silver_0049", "query": "Mass Effect, Confirmation, Abnormality of the dentition", "relevant_pmcids": ["PMC12930114"]}
+{"qid": "silver_0050", "query": "No risk, Antimicrobial susceptibility, Low risk, risk factors", "relevant_pmcids": ["PMC12931835"]}
+{"qid": "silver_0051", "query": "Drug Tolerance, Perceived quality of life, Anticipated", "relevant_pmcids": ["PMC12928252"]}
+{"qid": "silver_0052", "query": "Antimicrobial susceptibility, Positive, Supplementing", "relevant_pmcids": ["PMC12925613"]}
+{"qid": "silver_0053", "query": "Regional Disease, Encounter due to low income, Transplant, No effect", "relevant_pmcids": ["PMC12925128"]}
+{"qid": "silver_0054", "query": "Lifetime Drinking History, Positive", "relevant_pmcids": ["PMC12929365"]}
+{"qid": "silver_0055", "query": "No Hospital Admission, Pseudo-chilblains on toes, Pseudo-chilblains on fingers, Reflux in Children", "relevant_pmcids": ["PMC12929383"]}
+{"qid": "silver_0056", "query": "Missense, Reduced", "relevant_pmcids": ["PMC12927641"]}
+{"qid": "silver_0057", "query": "Pain, Postoperative, Postoperative state", "relevant_pmcids": ["PMC12929360"]}
+{"qid": "silver_0058", "query": "Not Normal but Fairly Active, Reflux in Children, Primary Language Spoken, Infantile Colic", "relevant_pmcids": ["PMC12928010"]}
+{"qid": "silver_0059", "query": "Positive, Positive Finding, Pulmonary compliance", "relevant_pmcids": ["PMC12926338"]}
+{"qid": "silver_0060", "query": "Above average intellect, Left atrial pressure", "relevant_pmcids": ["PMC12924749"]}
+{"qid": "silver_0061", "query": "Medical History, Allergy Severity - Severe, Intensity and Distress 5, No risk", "relevant_pmcids": ["PMC12931567"]}
+{"qid": "silver_0062", "query": "Bone maturation age, Mechanical ventilation finding, Suicide, Outcome of Event", "relevant_pmcids": ["PMC12926633"]}
+{"qid": "silver_0063", "query": "Depressive Symptoms, Feeling relief", "relevant_pmcids": ["PMC12930831"]}
+{"qid": "silver_0064", "query": "health disparity, Social stigmata, Impaired mobility, risk factors", "relevant_pmcids": ["PMC12926810"]}
+{"qid": "silver_0065", "query": "Diagnostic or Prognostic Factor, Aspartate Aminotransferase Increased, Preoperative state", "relevant_pmcids": ["PMC12929145"]}
+{"qid": "silver_0066", "query": "Low alkaline phosphatase, Reduced, Moderate, Cholesterol cleft", "relevant_pmcids": ["PMC12930587"]}
+{"qid": "silver_0067", "query": "Pathologic Complete Response, Residual Cancer Burden Class 0", "relevant_pmcids": ["PMC12926500"]}
+{"qid": "silver_0068", "query": "Disease Response, Reduced, No Response - Disease Response, No risk", "relevant_pmcids": ["PMC12930284"]}
+{"qid": "silver_0069", "query": "Single organ dysfunction, Performance Status, Signs and Symptoms", "relevant_pmcids": ["PMC12930322"]}
+{"qid": "silver_0070", "query": "Patient age, Sedated state, Pain, Postoperative, Postoperative state", "relevant_pmcids": ["PMC12927408"]}
+{"qid": "silver_0071", "query": "Antigliadin antibody positivity, Late diastolic murmur, Late systolic murmur", "relevant_pmcids": ["PMC12931808"]}
+{"qid": "silver_0072", "query": "combination - answer to question, Determination of bacterial growth", "relevant_pmcids": ["PMC12930829"]}
+{"qid": "silver_0073", "query": "Actual Effective Protective Ability, Allergy Severity - Severe, Intensity and Distress 5", "relevant_pmcids": ["PMC12930323"]}
+{"qid": "silver_0074", "query": "Positive, Positive Finding", "relevant_pmcids": ["PMC12931474"]}
+{"qid": "silver_0075", "query": "Apnea, Discharge, body substance, Present, Not Eligible", "relevant_pmcids": ["PMC12929698"]}
+{"qid": "silver_0076", "query": "Positive, Positive Finding, Negative, Negative Finding", "relevant_pmcids": ["PMC12929273"]}
+{"qid": "silver_0077", "query": "Some Days, Blood glucose normal, Pain Threshold, Discharge, body substance", "relevant_pmcids": ["PMC12928430"]}
+{"qid": "silver_0078", "query": "Treponema identified, Microfilaria sp identified, Container status - Identified", "relevant_pmcids": ["PMC12926673"]}
+{"qid": "silver_0079", "query": "Observation parameter, Platelet mean volume finding, Reduced, Decreasing", "relevant_pmcids": ["PMC12930117"]}
+{"qid": "silver_0080", "query": "Present, Pain Threshold", "relevant_pmcids": ["PMC12929938"]}
+{"qid": "silver_0081", "query": "Independently able, Disease Controlled, Expression Positive, Present", "relevant_pmcids": ["PMC12930734"]}
+{"qid": "silver_0082", "query": "Peeling of skin, Dry Desquamation", "relevant_pmcids": ["PMC12928074"]}
+{"qid": "silver_0083", "query": "Antimicrobial susceptibility, Moderate risk", "relevant_pmcids": ["PMC12929096"]}
+{"qid": "silver_0084", "query": "Allergy Severity - Severe, Intensity and Distress 5, Reduced", "relevant_pmcids": ["PMC12925340"]}
+{"qid": "silver_0085", "query": "Container status - Missing, No risk, Discharge, body substance, Discharged Alive", "relevant_pmcids": ["PMC12929481"]}
+{"qid": "silver_0086", "query": "Treponema identified, Microfilaria sp identified", "relevant_pmcids": ["PMC12927438"]}
+{"qid": "silver_0087", "query": "Medical History, Reduced", "relevant_pmcids": ["PMC12926009"]}
+{"qid": "silver_0088", "query": "No Complication, Oral health, Late tooth eruption, Early Term Birth", "relevant_pmcids": ["PMC12929254"]}
+{"qid": "silver_0089", "query": "Positive, Positive Finding, Serum creatinine level", "relevant_pmcids": ["PMC12926124"]}
+{"qid": "silver_0090", "query": "Encounter Admission Source - emergency, Source, Source Age", "relevant_pmcids": ["PMC12927163"]}
+{"qid": "silver_0091", "query": "Related personal status, Positive, Positive Finding, Blue - answer to question", "relevant_pmcids": ["PMC12927549"]}
+{"qid": "silver_0092", "query": "Antimicrobial susceptibility, Performance Status", "relevant_pmcids": ["PMC12930889"]}
+{"qid": "silver_0093", "query": "No risk, Aspartate Aminotransferase Increased", "relevant_pmcids": ["PMC12931699"]}
+{"qid": "silver_0094", "query": "Confirmation, No effect, Finding related to attitude of fetus", "relevant_pmcids": ["PMC12928499"]}
+{"qid": "silver_0095", "query": "Fatalities, Actual Effective Protective Ability, Aspartate Aminotransferase Increased", "relevant_pmcids": ["PMC12930730"]}
+{"qid": "silver_0096", "query": "Some Days, Syncope, Date of onset", "relevant_pmcids": ["PMC12930965"]}
+{"qid": "silver_0097", "query": "Positive, Positive Finding", "relevant_pmcids": ["PMC12931791"]}
+{"qid": "silver_0098", "query": "Mixed Cell Morphology, Not Normal but Fairly Active, No Response - Disease Response, No response", "relevant_pmcids": ["PMC12926641"]}
+{"qid": "silver_0099", "query": "Expression Positive, Expression Negative, Medium Growth Rate, Fast Growing", "relevant_pmcids": ["PMC12930168"]}
+{"qid": "silver_0100", "query": "Positive, Positive Finding, Weakness", "relevant_pmcids": ["PMC12927916"]}
+{"qid": "silver_0101", "query": "Pathologic Complete Response, Residual Cancer Burden Class 0, combination - answer to question", "relevant_pmcids": ["PMC12929614"]}
+{"qid": "silver_0102", "query": "Antimicrobial susceptibility, Negative, Negative Finding, Some Days", "relevant_pmcids": ["PMC12928175"]}
+{"qid": "silver_0103", "query": "NO TREATMENT, Patient currently pregnant, Maternal", "relevant_pmcids": ["PMC12925599"]}
+{"qid": "silver_0104", "query": "Signaling Pathway Status, JAK2 Gene Mutation Negative, Pathologic Complete Response", "relevant_pmcids": ["PMC12931230"]}
+{"qid": "silver_0105", "query": "Antimicrobial susceptibility, Performance Status", "relevant_pmcids": ["PMC12930043"]}
+{"qid": "silver_0106", "query": "Allergy Severity - Severe, Intensity and Distress 5", "relevant_pmcids": ["PMC12928934"]}
+{"qid": "silver_0107", "query": "Malaise, Patient Outcome - Died", "relevant_pmcids": ["PMC12931771"]}
+{"qid": "silver_0108", "query": "Transplant, NO TREATMENT", "relevant_pmcids": ["PMC12931237"]}
+{"qid": "silver_0109", "query": "Impaired mobility, Invasive Lesion, PR segment elevation", "relevant_pmcids": ["PMC12931084"]}
+{"qid": "silver_0110", "query": "Pulmonary compliance, Related personal status", "relevant_pmcids": ["PMC12931950"]}
+{"qid": "silver_0111", "query": "Seizures, Square face, High risk of", "relevant_pmcids": ["PMC12930701"]}
+{"qid": "silver_0112", "query": "Positive rpr, Antimicrobial susceptibility", "relevant_pmcids": ["PMC12927238"]}
+{"qid": "silver_0113", "query": "Treponema identified, Microfilaria sp identified, Container status - Identified", "relevant_pmcids": ["PMC12930751"]}
+{"qid": "silver_0114", "query": "Related personal status, surgical implants, Allergy Severity - Severe, Intensity and Distress 5", "relevant_pmcids": ["PMC12927387"]}
+{"qid": "silver_0115", "query": "Treponema identified, Microfilaria sp identified, Container status - Identified, Identified By", "relevant_pmcids": ["PMC12926571"]}
+{"qid": "silver_0116", "query": "Mobility as a finding, Discharge, body substance", "relevant_pmcids": ["PMC12929297"]}
+{"qid": "silver_0117", "query": "Total cholesterol, Decreased HDL cholesterol concentration, Cholesterol cleft", "relevant_pmcids": ["PMC12931706"]}
+{"qid": "silver_0118", "query": "risk factors, Signs and Symptoms, Finding, Experimental Finding", "relevant_pmcids": ["PMC12927959"]}
+{"qid": "silver_0119", "query": "Positive, Positive Finding, Related personal status", "relevant_pmcids": ["PMC12928923"]}
+{"qid": "silver_0120", "query": "Stringent Complete Response, Coagulation surface induced, Accumulation, Signs and Symptoms", "relevant_pmcids": ["PMC12927454"]}
